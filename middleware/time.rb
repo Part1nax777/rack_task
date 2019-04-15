@@ -1,32 +1,32 @@
 class TimeString
-  TIME_FORMATS = [
-    "year",
-    "month",
-    "day",
-    "hour",
-    "minute",
-    "second"
-  ]
+  TIME_FORMATS = {
+    'year'   => '%Y',
+    'month'  => '%m',
+    'day'    => '%d',
+    'hour'   => '%H',
+    'minute' => '%M',
+    'second' => '%S'
+  }.freeze
 
-  def initialize(time)
-    @time = time.split(',')
+  def initialize(params)
+    @time_params = params.split(',')
   end
 
-  def form_time_string
-    unknown_formats = []
-    @time.each do |t|
-      unknown_formats.push(t) unless TIME_FORMATS.include?(t)
-    end
+  def invalid_params
+    @unknown_formats = @time_params.reject { |t| TIME_FORMATS.include?(t) }
+  end
 
-    return ("Unknown time format: #{unknown_formats}") unless unknown_formats.empty?
+  def valid?
+    invalid_params.empty?
+  end
 
-    final_string = ""
-    @time.each do |t|
-      final_string += "#{ Time.now.send(t) }-"
-    end
+  def formatted_time
+    Time.now.strftime(format_string)
+  end
 
-    final_string.chomp!("-")
-    final_string += "\n"
-    final_string
+  private
+
+  def format_string
+    @time_params.map { |t| TIME_FORMATS[t] }.join('-')
   end
 end
