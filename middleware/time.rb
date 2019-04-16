@@ -13,7 +13,7 @@ class TimeString
   end
 
   def invalid_params
-    @unknown_formats = @time_params.reject { |t| TIME_FORMATS.include?(t) }
+    @time_params.reject { |t| TIME_FORMATS.include?(t) }
   end
 
   def valid?
